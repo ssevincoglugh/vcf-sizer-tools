@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCF 9.0 — Sizer Araçları Rehberi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:      #0B1929;
+    --ink-mid:  #1E3A5F;
+    --ink-muted:#4A6A8A;
+    --cyan:     #00C8E0;
+    --cyan-dim: #007A8C;
+    --green:    #00C48C;
+    --amber:    #F5A623;
+    --red:      #E05252;
+    --purple:   #7C6FCD;
+    --white:    #FFFFFF;
+    --paper:    #F0F5FA;
+    --card:     #FFFFFF;
+    --line:     #D4E2F0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--ink);
+    border-radius: 20px 20px 0 0;
+    padding: 40px 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyan), var(--green), var(--purple));
+  }
+  .header::after {
+    content: 'SIZER';
+    position: absolute;
+    right: -10px; top: -10px;
+    font-size: 140px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.03);
+    letter-spacing: -8px;
+    pointer-events: none;
+    line-height: 1;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,200,224,0.15);
+    border: 1px solid rgba(0,200,224,0.35);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--cyan);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .badge::before { content: '●'; font-size: 8px; }
+  .header h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+  .header h1 span { color: var(--cyan); }
+  .header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+  }
+
+  /* ── Stats ── */
+  .stats {
+    background: var(--ink-mid);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 2px solid var(--ink);
+  }
+  .stat {
+    padding: 18px 24px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cyan);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Tools ── */
+  .tools {
+    background: var(--card);
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tool-card {
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .tool-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+  }
+
+  .tool-head {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 24px;
+  }
+  .tool-num {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+    color: var(--white); flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+  .tool-title { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+  .tool-subtitle { font-size: 12px; color: var(--ink-muted); margin-top: 2px; font-weight: 400; }
+
+  .login-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .login-yes { background: #FEE2E2; color: var(--red); }
+  .login-no  { background: #D1FAE5; color: #065F46; }
+
+  .tool-body {
+    padding: 0 24px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .tool-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .tool-desc {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .link-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .link-tag.primary   { background: #DBEAFE; color: #1E40AF; }
+  .link-tag.secondary { background: #EDE9FE; color: #5B21B6; }
+  .link-tag.kb        { background: #FCE7F3; color: #9D174D; }
+
+  a.tool-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    color: #1D6AE5;
+    text-decoration: none;
+    word-break: break-all;
+    transition: color 0.15s;
+  }
+  a.tool-link:hover { color: var(--cyan-dim); text-decoration: underline; }
+
+  /* ── Card accents ── */
+  .c1 .tool-head { background: #EFF9FF; border-bottom: 2px solid #BFDBFE; }
+  .c1 .tool-num  { background: #1565C0; }
+
+  .c2 .tool-head { background: #F0FDF4; border-bottom: 2px solid #BBF7D0; }
+  .c2 .tool-num  { background: #2E7D32; }
+
+  .c3 .tool-head { background: #FFFBEB; border-bottom: 2px solid #FDE68A; }
+  .c3 .tool-num  { background: #B45309; }
+
+  .c4 .tool-head { background: #F5F3FF; border-bottom: 2px solid #DDD6FE; }
+  .c4 .tool-num  { background: #6D28D9; }
+
+  .c5 .tool-head { background: #FDF2F8; border-bottom: 2px solid #FBCFE8; }
+  .c5 .tool-num  { background: #9D174D; }
+
+  /* ── Notes ── */
+  .notes-section {
+    background: var(--ink);
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .notes-title {
+    grid-column: span 2;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .note-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .note-head { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
+  .note-text { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  /* ── Footer ── */
+  .footer {
+    background: linear-gradient(135deg, var(--ink-mid), var(--ink));
+    border-radius: 0 0 20px 20px;
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-source {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    font-style: italic;
+  }
+  .footer-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .footer-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 99px;
+    padding: 3px 10px;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">VCF 9.0 · Resmi Broadcom Araçları</div>
+    <h1>Boyutlandırma ve <span>Sizer Araçları</span> Rehberi</h1>
+    <p>VMware Cloud Foundation 9.0 — Tüm resmi sizing araçları tek sayfada</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Sizer Aracı</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Tıklanabilir Link</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Ücretsiz Erişim</div></div>
+    <div class="stat"><div class="stat-num">1</div><div class="stat-label">Giriş Gerekli</div></div>
+  </div>
+
+  <!-- Tools -->
+  <div class="tools">
+
+    <!-- 1 -->
+    <div class="tool-card c1">
+      <div class="tool-head">
+        <div class="tool-num">01</div>
+        <div>
+          <div class="tool-title">vSAN ReadyNode Sizer</div>
+          <div class="tool-subtitle">vSAN HCI Cluster Boyutlandırma — OSA &amp; ESA</div>
+        </div>
+        <span class="login-badge login-yes">🔒 Giriş Gerekli</span>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="tool-section-label">Ne boyutlandırır?</div>
+          <div class="tool-desc">VM sayısı, workload tipi ve resilience seviyesine göre vSAN cluster'ı için CPU, RAM ve disk kapasitesini hesaplar. OSA ve ESA mimarilerini destekler. LiveOptics ve RVTools ile veri import edilebilir.</div>
+        </div>
+        <div>
+          <div class="tool-section-label">Bağlantılar</div>
+          <div class="link-item">
+            <span class="link-tag primary">Ana</span>
+            <a class="tool-link" href="https://vcf.broadcom.com/tools/vsansizer/home/" target="_blank">vcf.broadcom.com/tools/vsansizer/home/</a>
+          </div>
+          <div class="link-item">
+            <span class="link-tag secondary">Reverse</span>
+            <a class="tool-link" href="https://vcf.broadcom.com/tools/vsansizer/reversesizer" target="_blank">vcf.broadcom.com/tools/vsansizer/reversesizer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="tool-card c2">
+      <div class="tool-head">
+        <div class="tool-num">02</div>
+        <div>
+          <div class="tool-title">VCF Operations Sizer</div>
+          <div class="tool-subtitle">Eski adı: vROps Sizer — Operations Node Boyutlandırma</div>
+        </div>
+        <span class="login-badge login-no">✓ Ücretsiz</span>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="tool-section-label">Ne boyutlandırır?</div>
+          <div class="tool-desc">Simple ve HA deployment senaryolarında VCF Operations node'larının vCPU, RAM ve disk gereksinimlerini belirler. Büyüme projeksiyonu ve data retention süresi ayarlanabilir.</div>
+        </div>
+        <div>
+          <div class="tool-section-label">Bağlantı</div>
+          <div class="link-item">
+            <span class="link-tag primary">Ana</span>
+            <a class="tool-link" href="https://vropssizer.broadcom.com" target="_blank">vropssizer.broadcom.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="tool-card c3">
+      <div class="tool-head">
+        <div class="tool-num">03</div>
+        <div>
+          <div class="tool-title">VCF Operations for Logs Sizing Estimator</div>
+          <div class="tool-subtitle">Eski adı: vRLI Sizer — Log Altyapısı Boyutlandırma</div>
+        </div>
+        <span class="login-badge login-no">✓ Ücretsiz</span>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="tool-section-label">Ne boyutlandırır?</div>
+          <div class="tool-desc">Events Per Second (EPS) değeri ve retention süresine göre Logs cluster node boyutunu tahmin eder. Kural: 5.000 EPS'te 30 günlük retention için ~1 TB/node. Sonuç kesin değil, tahmindir.</div>
+        </div>
+        <div>
+          <div class="tool-section-label">Bağlantılar</div>
+          <div class="link-item">
+            <span class="link-tag primary">Genel Bakış</span>
+            <a class="tool-link" href="https://vrlisizer.broadcom.com/overview" target="_blank">vrlisizer.broadcom.com/overview</a>
+          </div>
+          <div class="link-item">
+            <span class="link-tag secondary">Hesaplayıcı</span>
+            <a class="tool-link" href="https://vrlisizer.broadcom.com/estimator" target="_blank">vrlisizer.broadcom.com/estimator</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="tool-card c4">
+      <div class="tool-head">
+        <div class="tool-num">04</div>
+        <div>
+          <div class="tool-title">VCF Donanım Uyumluluk Rehberi</div>
+          <div class="tool-subtitle">vSAN ReadyNode HCL — Sertifikalı Donanım Doğrulama</div>
+        </div>
+        <span class="login-badge login-no">✓ Ücretsiz</span>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="tool-section-label">Ne doğrular?</div>
+          <div class="tool-desc">vSAN deployment'ları için sertifikalı donanımları listeler: NIC, HBA, storage controller ve ReadyNode'lar. Donanım satın alımından önce HCL uyumluluğu kontrolü zorunludur.</div>
+        </div>
+        <div>
+          <div class="tool-section-label">Bağlantılar</div>
+          <div class="link-item">
+            <span class="link-tag primary">Ana</span>
+            <a class="tool-link" href="https://compatibilityguide.broadcom.com/" target="_blank">compatibilityguide.broadcom.com</a>
+          </div>
+          <div class="link-item">
+            <span class="link-tag secondary">Eski</span>
+            <a class="tool-link" href="https://www.vmware.com/resources/compatibility/search.php" target="_blank">vmware.com/resources/compatibility</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="tool-card c5">
+      <div class="tool-head">
+        <div class="tool-num">05</div>
+        <div>
+          <div class="tool-title">Logs Appliance Dikey Ölçekleme KB</div>
+          <div class="tool-subtitle">Broadcom Bilgi Tabanı — Node Boyutu Artırma Rehberi</div>
+        </div>
+        <span class="login-badge login-no">✓ Ücretsiz</span>
+      </div>
+      <div class="tool-body">
+        <div>
+          <div class="tool-section-label">Ne kapsar?</div>
+          <div class="tool-desc">VCF Operations for Logs appliance'ının mevcut kapasitesi yetersiz kaldığında, yatay ölçekleme tercih edilmeden node boyutunun artırılması için adım adım rehber.</div>
+        </div>
+        <div>
+          <div class="tool-section-label">Bağlantı</div>
+          <div class="link-item">
+            <span class="link-tag kb">KB Makalesi</span>
+            <a class="tool-link" href="https://knowledge.broadcom.com/external/article?legacyId=80928" target="_blank">knowledge.broadcom.com · legacyId=80928</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Notes -->
+  <div class="notes-section">
+    <div class="notes-title">📋 Tasarım Notları</div>
+    <div class="note-item">
+      <div class="note-head">🗒️ PnP Workbook Zorunludur</div>
+      <div class="note-text">VCF Planning &amp; Preparation Workbook her zaman sizer araçlarıyla birlikte kullanılmalıdır. Sizer araçları tek başına yeterli değildir.</div>
+    </div>
+    <div class="note-item">
+      <div class="note-head">📥 vSAN Veri Kaynakları</div>
+      <div class="note-text">vSAN ReadyNode Sizer; LiveOptics, RVTools ve manuel giriş ile çalışır. En doğru sonuç için LiveOptics verisi kullanılması önerilir.</div>
+    </div>
+    <div class="note-item">
+      <div class="note-head">💾 Logs Disk Kural Tahmini</div>
+      <div class="note-text">5.000 EPS'te 30 günlük retention için ~1 TB/node. 90 günlük retention için ~3 TB/node. Gerçek değer log yoğunluğuna göre değişir.</div>
+    </div>
+    <div class="note-item">
+      <div class="note-head">📈 Büyüme İçin Boyutlandır</div>
+      <div class="note-text">HA modu erişilebilirliği artırır ancak metrik kapasitesini artırmaz. Fleet genişlemesi için her zaman büyüme payı bırakılmalıdır.</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-source">📄 Kaynak: EDU-EN-VCFSAD-LEC-IE.pdf · VMware Cloud Foundation: Solution Architecture and Design [V9.0]</div>
+    <div class="footer-tags">
+      <span class="footer-tag">#VCF</span>
+      <span class="footer-tag">#VMware</span>
+      <span class="footer-tag">#Broadcom</span>
+      <span class="footer-tag">#vSAN</span>
+      <span class="footer-tag">#CloudFoundation</span>
+      <span class="footer-tag">#PrivateCloud</span>
+      <span class="footer-tag">#Altyapı</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
